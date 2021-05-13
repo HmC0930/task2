@@ -1,4 +1,4 @@
-package com.example.task2.Model
+package com.example.task2.model
 
 class SongList {
     var listName: String = ""

@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.task2.Model.Music
 import com.example.task2.R
 import com.example.task2.data.Repository
 import kotlinx.android.synthetic.main.fragment_musiclist.*
+import kotlinx.android.synthetic.main.fragment_player.*
 
-class MusicListFragment : Fragment() {
+class MusicsFragment : Fragment() {
     var position = 0
-    val viewModel by lazy { ViewModelProvider(this).get(MusicListViewModel::class.java) }
     private lateinit var adapter: MusicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +31,7 @@ class MusicListFragment : Fragment() {
     ): View? {
         val layoutManager = LinearLayoutManager(activity)
         musicListRecyclerView.layoutManager = layoutManager
-        val adapter = MusicAdapter(this,Repository.collectionList[position].musics)
+        val adapter = MusicAdapter(this,Repository.songLists[position].musics)
         musicListRecyclerView.adapter = adapter
         return inflater.inflate(R.layout.fragment_musiclist,container,false)
 
