@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.media.MediaBrowserServiceCompat
 
 class PlayerViewModel : ViewModel() {
-    var maxLivadata = MutableLiveData<Int>()
+    var maxLiveData = MutableLiveData<Int>()
     var progressLiveData = MutableLiveData<Int>()
 
 

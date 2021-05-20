@@ -1,17 +1,19 @@
 package com.example.task2.ui.music
 
-import android.os.Bundle
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.task2.model.SongList
+import com.example.task2.MusicApplication.Companion.context
 import com.example.task2.R
+import com.example.task2.model.Music
+import com.example.task2.model.SongList
 
 
-class SongListAdapter(val fragment: Fragment, val songListList: List<SongList>) :
+class SongListAdapter(val fragment: Fragment, val songListList: ArrayList<SongList>) :
     RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.collectionNameTextView)
@@ -19,24 +21,17 @@ class SongListAdapter(val fragment: Fragment, val songListList: List<SongList>) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.collection_item, parent,
+            R.layout.songlist_item, parent,
             false
         )
         val holder = ViewHolder(view)
         holder.itemView.setOnClickListener{
             val position = holder.adapterPosition
-
-
-            val fm = fragment.childFragmentManager
-            val ft = fm.beginTransaction()
-            val musicListFragment = MusicsFragment()
-            val bundle = Bundle()
-            bundle.putInt("position",position)
-            musicListFragment.arguments = bundle
-            ft.replace(R.id.fragment_container_view_tag,musicListFragment)
-            ft.addToBackStack(null)
-            ft.commit()
-
+            val intent = Intent(context, MusicsActivity::class.java).apply {
+                putExtra("currentSongListPosition",position)
+            }
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            context.startActivity(intent)
         }
         return holder
     }
@@ -47,4 +42,5 @@ class SongListAdapter(val fragment: Fragment, val songListList: List<SongList>) 
     }
 
     override fun getItemCount() = songListList.size
+
 }

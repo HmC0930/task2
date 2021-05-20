@@ -7,6 +7,7 @@
     tools:context=".ui.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/musicListsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="457dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,7 +18,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/newmusiclistbutton"
+        android:id="@+id/newsonglistbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="新建歌单"

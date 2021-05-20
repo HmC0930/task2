@@ -1,7 +1,9 @@
 package com.example.task2.data
 
+import android.os.Build
 import android.provider.MediaStore
 import android.provider.Telephony
+import androidx.annotation.RequiresApi
 import com.example.task2.model.SongList
 import com.example.task2.model.Music
 import com.example.task2.MusicApplication
@@ -12,7 +14,7 @@ object Repository {
 
     private fun getLocalMusic(): List<Music> {
         val list = ArrayList<Music>()
-        var cursor = MusicApplication.context.contentResolver.query(
+        val cursor = MusicApplication.context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             null, null, null, MediaStore.Audio.Media.IS_MUSIC
         )
@@ -25,6 +27,7 @@ object Repository {
                     cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)),
                     cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Mms.Part._DATA))
                 )
+
                 list.add(music)
             }
         }
@@ -32,6 +35,7 @@ object Repository {
         songList.listName = "本地音乐"
         songList.musics.addAll(list)
         songLists.add(songList)
+        cursor?.close()
         return list
     }
 

@@ -10,7 +10,7 @@ import com.example.task2.MainActivity.Companion.binder
 import com.example.task2.model.Music
 import com.example.task2.R
 
-class MusicAdapter (val fragment: Fragment,val musicList: List<Music>):
+class MusicAdapter (val musicList: List<Music>):
     RecyclerView.Adapter<MusicAdapter.ViewHolder>(){
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

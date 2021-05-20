@@ -10,26 +10,20 @@
         android:name="com.example.task2.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_musics"
-            app:destination="@id/navigation_musics" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_online"
         android:name="com.example.task2.ui.searchmusicsonline.SearchOnlineFragment"
         android:label="@string/title_searchonline"
-        tools:layout="@layout/fragment_online" />
+        tools:layout="@layout/fragment_online" >
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_player"
         android:name="com.example.task2.ui.player.PlayerFragment"
         android:label="@string/title_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player" >
+    </fragment>
 
-    <fragment
-        android:id="@+id/navigation_musics"
-        android:name="com.example.task2.ui.music.MusicsFragment"
-        tools:layout="@layout/fragment_musiclist"
-        />
 </navigation>
