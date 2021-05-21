@@ -113,6 +113,14 @@ class MusicService : Service() {
 
     inner class MusicServiceBinder : Binder() {
 
+        fun getCurrentMusicTitle() : String {
+            return currentMusic?.title.toString()
+        }
+
+        fun getCurrentMusicArtist() : String {
+            return currentMusic?.artist.toString()
+        }
+
         fun getPlayDuration() : Int {
             return player.duration
         }

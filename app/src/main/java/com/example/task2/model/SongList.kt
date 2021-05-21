@@ -1,15 +1,17 @@
 package com.example.task2.model
 
-class SongList {
+import android.telephony.mbms.StreamingServiceInfo
+
+class SongList (){
     var listName: String = ""
     var musics = ArrayList<Music>()
-    fun add(music: Music) {
+    fun addMusic(music: Music) {
         if (musics != null && !musics.contains(music)) {
             musics.add(music)
         }
     }
 
-    fun delete(music: Music) {
+    fun removeMusic(music: Music) {
         if (musics != null && musics.contains(music)) {
             musics.remove(music)
         }

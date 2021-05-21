@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatSeekBar
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +27,12 @@ class PlayerFragment : Fragment() {
     ): View? {
         playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
         val rootView = inflater.inflate(R.layout.fragment_player,container,false)
+
+        val currentMusicTitle = rootView.findViewById<AppCompatTextView>(R.id.current_music_title)
+        currentMusicTitle.text = binder.getCurrentMusicTitle()
+
+        val currentMusicArtist = rootView.findViewById<AppCompatTextView>(R.id.current_music_artist)
+        currentMusicArtist.text = binder.getCurrentMusicArtist()
 
         val playButton = rootView.findViewById<AppCompatImageButton>(R.id.playButton)
         playButton.setOnClickListener {
@@ -46,6 +54,9 @@ class PlayerFragment : Fragment() {
             binder.playPrevious()
         }
 
+        val seekBar = rootView.findViewById<AppCompatSeekBar>(R.id.seekBar)
+        seekBar.max = binder.getPlayDuration()
+        seekBar.progress = playerViewModel.progress
 //        val seekBarMaxObserver = Observer<Int>{ max->
 //            seekBar.max = max
 //        }

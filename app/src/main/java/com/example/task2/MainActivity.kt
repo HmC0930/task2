@@ -1,5 +1,6 @@
 package com.example.task2
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.task2.MusicApplication.Companion.context
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_player.*
 
 class MainActivity : AppCompatActivity() {
     companion object{
@@ -47,7 +49,6 @@ class MainActivity : AppCompatActivity() {
 
         val intent1 = Intent(this, MusicService::class.java)
         bindService(intent1, connection, Context.BIND_AUTO_CREATE)
-
     }
 
     override fun onDestroy() {

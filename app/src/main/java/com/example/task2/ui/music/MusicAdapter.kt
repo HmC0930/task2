@@ -37,7 +37,7 @@ class MusicAdapter (val musicList: List<Music>):
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         val music = musicList[position]
         holder.musicArtist.text = music.artist
-        holder.musicTitle.text = music.artist
+        holder.musicTitle.text = music.title
     }
 
     override fun getItemCount() = musicList.size
