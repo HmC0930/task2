@@ -44,6 +44,7 @@ class MusicService : Service() {
         return binder
     }
 
+
     fun playNextInner(){
         if (currentMusic == null) {
             return
@@ -112,6 +113,13 @@ class MusicService : Service() {
 
 
     inner class MusicServiceBinder : Binder() {
+        fun getPlayer() : MediaPlayer{
+            return  player
+        }
+
+        fun isCurrentMusicNull() : Boolean{
+            return currentMusic == null
+        }
 
         fun getCurrentMusicTitle() : String {
             return currentMusic?.title.toString()
@@ -194,6 +202,10 @@ class MusicService : Service() {
 
         fun setCurrentMusic(index: Int) {
             currentMusic = playingMusicList[index]
+        }
+
+        fun isPlaying(): Boolean {
+            return player.isPlaying
         }
     }
 

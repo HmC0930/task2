@@ -16,7 +16,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.task2.MainActivity.Companion.binder
 import com.example.task2.R
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_player.*
+import java.util.*
+import kotlin.concurrent.thread
 
 class PlayerFragment : Fragment() {
     private lateinit var playerViewModel: PlayerViewModel
@@ -47,45 +50,61 @@ class PlayerFragment : Fragment() {
         val nextButton = rootView.findViewById<AppCompatImageButton>(R.id.nextButton)
         nextButton.setOnClickListener {
             binder.playNext()
+            currentMusicArtist.text = binder.getCurrentMusicArtist()
+            currentMusicTitle.text = binder.getCurrentMusicTitle()
         }
 
         val previousButton = rootView.findViewById<AppCompatImageButton>(R.id.previousButton)
         previousButton.setOnClickListener {
             binder.playPrevious()
+            currentMusicArtist.text = binder.getCurrentMusicArtist()
+            currentMusicTitle.text = binder.getCurrentMusicTitle()
+            seekBar.max = binder.getPlayDuration()
         }
 
         val seekBar = rootView.findViewById<AppCompatSeekBar>(R.id.seekBar)
-        seekBar.max = binder.getPlayDuration()
-        seekBar.progress = playerViewModel.progress
-//        val seekBarMaxObserver = Observer<Int>{ max->
-//            seekBar.max = max
-//        }
-//        playerViewModel.maxLiveData.observe(viewLifecycleOwner,seekBarMaxObserver)
+        if (binder.isCurrentMusicNull()){
+            seekBar.isEnabled = false
+        }
+        else if (binder.isPlaying()){
+            seekBar.isEnabled = true
+            seekBar.max = binder.getPlayDuration()
+            seekBar.progress = binder.getPlayProgress()
+        }
 
-//        val seekBarProgressObserver = Observer<Int> {progress->
-//            seekBar.progress = progress
-//        }
-//        playerViewModel.progressLiveData.observe(viewLifecycleOwner,seekBarProgressObserver)
-//
-//        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-//            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-//                //拖动进度条时
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-//            override fun onStopTrackingTouch(seekBar: SeekBar) {
-//                binder.seekTo(seekBar.progress)
-//            }
-//        })
+        val task = MyTimerTask()
+
+        Timer().schedule(task,500,500)
+
+        binder.getPlayer().setOnCompletionListener {
+            binder.playNext()
+            currentMusicArtist.text = binder.getCurrentMusicArtist()
+            currentMusicTitle.text = binder.getCurrentMusicTitle()
+            seekBar.max = binder.getPlayDuration()
+        }
+
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                binder.seekTo(seekBar.progress)
+            }
+        })
 
         return rootView
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
 
+    inner class MyTimerTask() : TimerTask() {
+        override fun run() {
+            if (!binder.isCurrentMusicNull() && seekBar != null){
+                seekBar.progress =  binder.getPlayProgress()
+            }
+        }
+    }
 }
