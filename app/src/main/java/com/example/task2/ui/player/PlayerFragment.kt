@@ -15,7 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.task2.MainActivity.Companion.binder
+import com.example.task2.MusicApplication
 import com.example.task2.R
+import com.example.task2.ui.music.AddToSongListActivity
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_player.*
 import java.util.*
@@ -60,6 +62,17 @@ class PlayerFragment : Fragment() {
             currentMusicArtist.text = binder.getCurrentMusicArtist()
             currentMusicTitle.text = binder.getCurrentMusicTitle()
             seekBar.max = binder.getPlayDuration()
+        }
+
+        val starButton = rootView.findViewById<AppCompatImageButton>(R.id.starButton)
+        starButton.setOnClickListener {
+            val music = binder.getCurrentMusic()
+            val intent = Intent(MusicApplication.context, AddToSongListActivity::class.java)
+                .apply {
+                    putExtra("music", music)
+                }
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            MusicApplication.context.startActivity(intent)
         }
 
         val seekBar = rootView.findViewById<AppCompatSeekBar>(R.id.seekBar)

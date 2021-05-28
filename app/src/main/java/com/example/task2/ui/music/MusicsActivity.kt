@@ -13,9 +13,11 @@ class MusicsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_musics)
-        val currentSongListPosition = intent.getIntExtra("currentSongListPosition",0)
-        val layoutManager = GridLayoutManager(context,
-            1)
+        val currentSongListPosition = intent.getIntExtra("currentSongListPosition", 0)
+        val layoutManager = GridLayoutManager(
+            context,
+            1
+        )
         musicsRecyclerView.layoutManager = layoutManager
         val adapter = MusicAdapter(Repository.songLists[currentSongListPosition].musics)
         musicsRecyclerView.adapter = adapter

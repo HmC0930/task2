@@ -121,6 +121,10 @@ class MusicService : Service() {
             return currentMusic == null
         }
 
+        fun getCurrentMusic() : Music? {
+            return  currentMusic
+        }
+
         fun getCurrentMusicTitle() : String {
             return currentMusic?.title.toString()
         }

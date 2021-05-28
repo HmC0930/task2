@@ -17,7 +17,9 @@
         android:theme="@style/Theme.Music">
         <activity
             android:name=".ui.music.AddToSongListActivity"
-            android:theme="@style/Theme.Dialog"/>
+            android:theme="@style/Theme.Dialog"
+            android:launchMode="singleInstance"
+            android:finishOnTaskLaunch="true"/>
 
         <activity
             android:name=".ui.home.AddSongListActivity"

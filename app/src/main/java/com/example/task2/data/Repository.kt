@@ -21,8 +21,8 @@ object Repository {
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 val music = Music(
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)),
                     cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)),
                     cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)),
                     cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Mms.Part._DATA))

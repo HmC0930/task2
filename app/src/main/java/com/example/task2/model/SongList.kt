@@ -1,7 +1,11 @@
 package com.example.task2.model
 
+import android.annotation.SuppressLint
 import android.telephony.mbms.StreamingServiceInfo
+import kotlinx.android.parcel.Parcelize
 
+@SuppressLint("ParcelCreator")
+@Parcelize
 class SongList (){
     var listName: String = ""
     var musics = ArrayList<Music>()
