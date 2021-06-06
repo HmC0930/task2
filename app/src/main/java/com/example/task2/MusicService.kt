@@ -1,16 +1,24 @@
 package com.example.task2
 
-import android.app.Service
+
+import android.app.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
-import android.util.Log
-import com.example.task2.model.Music
+import android.os.Bundle
+import android.widget.RemoteViews
+import androidx.core.app.NotificationCompat
 import com.example.task2.MusicApplication.Companion.context
+import com.example.task2.model.Music
+import com.example.task2.notification.NotificationClickReceiver
+import com.example.task2.ui.player.PlayerFragment
 import java.io.IOException
 
 class MusicService : Service() {
@@ -18,16 +26,49 @@ class MusicService : Service() {
     var isNeedReload = true
     val player = MediaPlayer()
     var playingMusicList = ArrayList<Music>()
-    val binder = MusicServiceBinder()
-    val audioManager = context.getSystemService(AUDIO_SERVICE) as AudioManager
-    var playMode = 0
+    private val binder = MusicServiceBinder()
+    private val audioManager = context.getSystemService(AUDIO_SERVICE) as AudioManager
+    var playMode = MusicApplication.TYPE_ORDER
     var currentMusic : Music? = null
+    private val musicReceiver = MusicReceiver()
+    private val remoteViews = RemoteViews(context.packageName, R.layout.notification)
+    private lateinit var notificationManager: NotificationManager
+    var notification: Notification? = null
 
     override fun onCreate() {
         super.onCreate()
         player.setOnCompletionListener{
             playNextInner()
         }
+
+        initRemoteViews()
+        registerMusicReceiver()
+
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val intent = Intent(context, NotificationClickReceiver::class.java)
+        val pendingIntent = PendingIntent
+            .getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val channelID = "channelID"
+        val channel = NotificationChannel(
+            channelID,
+            "channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+        notification = NotificationCompat.Builder(this, channelID)
+            .setContentIntent(pendingIntent)
+            .setCustomContentView(remoteViews)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(R.drawable.ic_play)
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setOnlyAlertOnce(true)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .build()
+        notificationManager.notify(1, notification)
+
+
     }
 
     override fun onDestroy() {
@@ -37,20 +78,102 @@ class MusicService : Service() {
         }
         player.release()
         playingMusicList.clear()
-
+        if (musicReceiver != null){
+            unregisterReceiver(musicReceiver)
+        }
     }
 
     override fun onBind(intent: Intent): MusicServiceBinder {
         return binder
     }
 
+    private fun initRemoteViews() {
+        val intentPrev = Intent("prev")
+        val prevPendingIntent = PendingIntent
+            .getBroadcast(this, 0, intentPrev, 0)
+        remoteViews.setOnClickPendingIntent(R.id.btn_notification_previous, prevPendingIntent)
+
+        val intentPlay = Intent("play")
+        val playPendingIntent = PendingIntent
+            .getBroadcast(this, 0, intentPlay, 0)
+        remoteViews.setOnClickPendingIntent(R.id.btn_notification_play, playPendingIntent)
+
+        val intentNext = Intent("next")
+        val nextPendingIntent = PendingIntent
+            .getBroadcast(this, 0, intentNext, 0)
+        remoteViews.setOnClickPendingIntent(R.id.btn_notification_next, nextPendingIntent)
+
+        val intentClose = Intent("close")
+        val closePendingIntent = PendingIntent
+            .getBroadcast(this, 0, intentClose, 0)
+        remoteViews.setOnClickPendingIntent(R.id.btn_notification_close, closePendingIntent)
+    }
+
+    inner class MusicReceiver : BroadcastReceiver(){
+        private val tag = "MusicReceiver"
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null ) {
+                intent.action?.let { UIControl(it, tag) }
+            }
+        }
+
+    }
+
+    fun UIControl(state: String, tag: String){
+        val msg = PlayerFragment.handler.obtainMessage()
+        when(state) {
+            "prev" -> {
+                binder.playPrevious()
+                msg.what = 2
+            }
+            "play" -> {
+                if (player.isPlaying){
+                    binder.pause()
+                    msg.what = 1
+                }else{
+                    binder.play()
+                    msg.what = 2
+                }
+            }
+            "next" -> {
+                binder.playNext()
+                msg.what = 2
+            }
+            "close" -> {
+                player.pause()
+                notificationManager.cancel(1)
+            }
+        }
+        PlayerFragment.handler.sendMessage(msg)
+    }
+
+    private fun registerMusicReceiver() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("play")
+        intentFilter.addAction("prev")
+        intentFilter.addAction("next")
+        intentFilter.addAction("close")
+        registerReceiver(musicReceiver, intentFilter)
+    }
+
+
+    fun updateNotificationShow() {
+        if (player.isPlaying){
+            remoteViews.setImageViewResource(R.id.btn_notification_play,R.drawable.pause_black)
+        }else{
+            remoteViews.setImageViewResource(R.id.btn_notification_play,R.drawable.play_black)
+        }
+        remoteViews.setTextViewText(R.id.notification_song_name, binder.getCurrentMusicTitle())
+        remoteViews.setTextViewText(R.id.notification_singer, binder.getCurrentMusicArtist())
+        notificationManager?.notify(1, notification)
+    }
 
     fun playNextInner(){
         if (currentMusic == null) {
             return
         }
         currentMusic = if (playMode == MusicApplication.TYPE_RANDOM){
-            val i = (0 + Math.random() * (playingMusicList.size + 1)) as Int
+            val i = (0 until playingMusicList.size).random()
             playingMusicList[i]
         }else{
             val currentIndex = playingMusicList.indexOf(currentMusic)
@@ -98,15 +221,16 @@ class MusicService : Service() {
             prepareToPlayInner(currentMusic)
         }
         player.start()
+        updateNotificationShow()
     }
 
     fun prepareToPlayInner(currentMusic: Music){
         try {
             player.reset()
-            player.setDataSource(context,Uri.parse(currentMusic.path))
+            player.setDataSource(context, Uri.parse(currentMusic.path))
             player.prepare()
 
-        }catch (e:IOException){
+        }catch (e: IOException){
             e.printStackTrace()
         }
     }
@@ -143,7 +267,7 @@ class MusicService : Service() {
 
         fun addToPlayList(item: Music) {
             if(!playingMusicList.contains(item)){
-                playingMusicList.add(0,item)
+                playingMusicList.add(0, item)
             }
         }
 
@@ -154,6 +278,7 @@ class MusicService : Service() {
 
         fun playNext() {
             playNextInner()
+            updateNotificationShow()
         }
 
         fun playPrevious() {
@@ -166,7 +291,7 @@ class MusicService : Service() {
                 isNeedReload = true
                 play()
             }
-
+            updateNotificationShow()
         }
 
         fun pause() {
@@ -177,11 +302,13 @@ class MusicService : Service() {
                 player.pause()
                 isNeedReload = false
             }
+            updateNotificationShow()
         }
 
 
         fun play() {
            playInner()
+            updateNotificationShow()
         }
 
         private fun prepareToPlay(item: Music){
@@ -189,10 +316,10 @@ class MusicService : Service() {
         }
 
         private fun playMusicItem(currentMusic: Music, isNeedReload: Boolean){
-            playMusicItemInner(currentMusic,isNeedReload)
+            playMusicItemInner(currentMusic, isNeedReload)
         }
 
-        fun setPlayMode(mode : Int) {
+        fun setPlayMode(mode: Int) {
             playMode = mode
         }
 

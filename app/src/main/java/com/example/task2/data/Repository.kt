@@ -7,12 +7,11 @@ import androidx.annotation.RequiresApi
 import com.example.task2.model.SongList
 import com.example.task2.model.Music
 import com.example.task2.MusicApplication
+import com.example.task2.data.dao.SongListDao
 
 object Repository {
     val songLists = ArrayList<SongList>()
-    val localMusics = getLocalMusic()
-
-    private fun getLocalMusic(): List<Music> {
+    fun getLocalMusic() {
         val list = ArrayList<Music>()
         val cursor = MusicApplication.context.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -34,10 +33,17 @@ object Repository {
         val songList = SongList()
         songList.listName = "本地音乐"
         songList.musics.addAll(list)
-        songLists.add(songList)
         cursor?.close()
-        return list
+        songLists.add(songList)
+        saveSongLists(songLists)
     }
 
+    fun saveSongLists(lists: ArrayList<SongList>) {
+        SongListDao.saveSongLists(lists)
+    }
+
+    fun getSavedSongLists() :ArrayList<SongList> {
+        return SongListDao.getSongLists()
+    }
 
 }

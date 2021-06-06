@@ -15,12 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Music">
+        <receiver
+            android:name=".notification.NotificationClickReceiver"
+            android:enabled="false"
+            android:exported="false"></receiver>
+
+        <activity android:name=".notification.NotifiactionActivity" />
         <activity
             android:name=".ui.music.AddToSongListActivity"
-            android:theme="@style/Theme.Dialog"
+            android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:finishOnTaskLaunch="true"/>
-
+            android:theme="@style/Theme.Dialog" />
         <activity
             android:name=".ui.home.AddSongListActivity"
             android:theme="@style/Theme.Dialog" />

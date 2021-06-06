@@ -14,7 +14,11 @@ class HomeViewModel : ViewModel() {
     val text: LiveData<String> = _text
 
     fun getSongLists() : List<SongList> {
-        return Repository.songLists
+        return Repository.getSavedSongLists()
+    }
+
+    fun saveSongLists(songLists: ArrayList<SongList>) {
+        Repository.saveSongLists(songLists)
     }
 
 }

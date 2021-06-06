@@ -20,13 +20,13 @@ class AddToSongListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_to_song_list)
 
-        val music = intent.getParcelableExtra<Music>("music")
+        val music = intent.getSerializableExtra("music")
 
         songLists.forEach {
             songListNames.add(it.listName)
         }
 
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
             songListNames)
         list_view.adapter = adapter
         list_view.setOnItemClickListener { parent, view, position, id ->
@@ -34,7 +34,7 @@ class AddToSongListActivity : AppCompatActivity() {
                 Toast.makeText(this,"歌曲已存在", Toast.LENGTH_SHORT).show()
             }
             if (music != null && !Repository.songLists[position].musics.contains(music)) {
-                Repository.songLists[position].addMusic(music)
+                Repository.songLists[position].addMusic(music as Music)
                 Toast.makeText(this, "添加成功", Toast.LENGTH_SHORT).show()
             }
             this.finish()

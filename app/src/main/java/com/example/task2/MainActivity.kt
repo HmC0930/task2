@@ -1,13 +1,17 @@
 package com.example.task2
 
 import android.app.Activity
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.*
-import android.os.Bundle
-import android.os.IBinder
+import android.os.*
 import android.util.Log
 import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -21,6 +25,15 @@ import kotlinx.android.synthetic.main.fragment_player.*
 class MainActivity : AppCompatActivity() {
     companion object{
         lateinit var binder : MusicService.MusicServiceBinder
+    }
+
+    val handler = object : Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            when(msg.what){
+
+
+            }
+        }
     }
 
     private val connection = object : ServiceConnection{
@@ -46,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         val intent1 = Intent(this, MusicService::class.java)
         bindService(intent1, connection, Context.BIND_AUTO_CREATE)
+
     }
 
     override fun onDestroy() {

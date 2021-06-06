@@ -20,6 +20,7 @@ class AddSongListActivity : AppCompatActivity() {
             val newSongList =  SongList()
             newSongList.listName = edit_new_song_list.text.toString()
             Repository.songLists.add(newSongList)
+            Repository.saveSongLists(Repository.songLists)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

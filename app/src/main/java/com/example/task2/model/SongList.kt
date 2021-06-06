@@ -2,12 +2,9 @@ package com.example.task2.model
 
 import android.annotation.SuppressLint
 import android.telephony.mbms.StreamingServiceInfo
-import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
-@SuppressLint("ParcelCreator")
-@Parcelize
-class SongList (){
-    var listName: String = ""
+data class SongList (var listName:String = ""): Serializable{
     var musics = ArrayList<Music>()
     fun addMusic(music: Music) {
         if (musics != null && !musics.contains(music)) {
