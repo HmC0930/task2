@@ -21,5 +21,6 @@ class MusicsActivity : AppCompatActivity() {
         musicsRecyclerView.layoutManager = layoutManager
         val adapter = MusicAdapter(Repository.songLists[currentSongListPosition].musics)
         musicsRecyclerView.adapter = adapter
+
     }
 }

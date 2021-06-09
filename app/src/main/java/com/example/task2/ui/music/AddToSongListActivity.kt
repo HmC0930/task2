@@ -12,6 +12,7 @@ import com.example.task2.data.Repository
 import com.example.task2.model.Music
 import com.example.task2.model.SongList
 import kotlinx.android.synthetic.main.activity_add_to_song_list.*
+import kotlin.concurrent.thread
 
 class AddToSongListActivity : AppCompatActivity() {
     var songLists = Repository.songLists
@@ -35,6 +36,9 @@ class AddToSongListActivity : AppCompatActivity() {
             }
             if (music != null && !Repository.songLists[position].musics.contains(music)) {
                 Repository.songLists[position].addMusic(music as Music)
+                thread {
+                    Repository.updateSongList(Repository.songLists[position])
+                }
                 Toast.makeText(this, "添加成功", Toast.LENGTH_SHORT).show()
             }
             this.finish()

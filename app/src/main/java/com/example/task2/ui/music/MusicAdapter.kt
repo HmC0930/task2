@@ -18,7 +18,7 @@ import com.example.task2.model.Music
 import kotlinx.android.synthetic.main.music_item.view.*
 
 
-class MusicAdapter(val musicList: ArrayList<Music>) :
+class MusicAdapter(val musicList: List<Music>) :
     RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,9 +46,9 @@ class MusicAdapter(val musicList: ArrayList<Music>) :
                 setMessage("确定删除歌曲？")
                 setCancelable(false)
                 setPositiveButton("删除"){dialog, which ->
-                    DialogInterface.OnClickListener { dialog, which ->
-                        musicList.removeAt(holder.adapterPosition)
-                    }
+//                    DialogInterface.OnClickListener { dialog, which ->
+//                        musicList.removeAt(holder.adapterPosition)
+//                    }
                 }
                 setNegativeButton("取消"){dialog, which ->
                 }

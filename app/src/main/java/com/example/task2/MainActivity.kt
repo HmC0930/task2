@@ -19,21 +19,14 @@ import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.task2.MusicApplication.Companion.context
+import com.example.task2.data.Repository
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_player.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     companion object{
         lateinit var binder : MusicService.MusicServiceBinder
-    }
-
-    val handler = object : Handler(Looper.getMainLooper()){
-        override fun handleMessage(msg: Message) {
-            when(msg.what){
-
-
-            }
-        }
     }
 
     private val connection = object : ServiceConnection{

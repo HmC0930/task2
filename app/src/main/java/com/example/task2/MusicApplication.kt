@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toolbar
 import com.example.task2.data.Repository
+import kotlin.concurrent.thread
 
 class MusicApplication : Application() {
 
@@ -21,11 +22,11 @@ class MusicApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-        Repository.getLocalMusic()
-
-    }
-
-    fun getContext() : Context{
-        return context
+        thread {
+            Repository.songLists = Repository.getSavedSongLists()
+            if (Repository.songLists.isEmpty()){
+                Repository.getLocalMusic()
+            }
+        }
     }
 }

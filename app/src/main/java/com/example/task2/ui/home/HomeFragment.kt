@@ -2,7 +2,6 @@ package com.example.task2.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task2.MusicApplication
 import com.example.task2.R
 import com.example.task2.model.SongList
-import com.example.task2.ui.music.MusicsActivity
 import com.example.task2.ui.music.SongListAdapter
 
 class HomeFragment : Fragment() {

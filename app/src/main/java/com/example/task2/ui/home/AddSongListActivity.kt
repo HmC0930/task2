@@ -10,6 +10,7 @@ import com.example.task2.R
 import com.example.task2.data.Repository
 import com.example.task2.model.SongList
 import kotlinx.android.synthetic.main.activity_add_song_list.*
+import kotlin.concurrent.thread
 
 class AddSongListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +21,9 @@ class AddSongListActivity : AppCompatActivity() {
             val newSongList =  SongList()
             newSongList.listName = edit_new_song_list.text.toString()
             Repository.songLists.add(newSongList)
-            Repository.saveSongLists(Repository.songLists)
+            thread {
+                Repository.saveSongList(newSongList)
+            }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }

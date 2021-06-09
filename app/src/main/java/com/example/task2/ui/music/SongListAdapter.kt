@@ -13,7 +13,7 @@ import com.example.task2.model.Music
 import com.example.task2.model.SongList
 
 
-class SongListAdapter(val fragment: Fragment, val songListList: ArrayList<SongList>) :
+class SongListAdapter(val fragment: Fragment, val songListList: List<SongList>) :
     RecyclerView.Adapter<SongListAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.collectionNameTextView)
